@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver.Core.Configuration;
+using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,38 +18,11 @@ builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen( c =>
-{
-    c.AddSecurityDefinition("Basic",
-        new OpenApiSecurityScheme
-        {
-            In = ParameterLocation.Header,
-            Description = "Please enter into field the word 'Basic' following by space and username:password",
-            Name = "Authorization",
-            Type = SecuritySchemeType.ApiKey
-        });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Basic"
-                }
-            },
-            new string[]{}
-        }
-    });
-
-});
+builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration["ConnectionString:MongoDb"];
 var databaseName = builder.Configuration["ConnectionString:DatabaseName"];
 
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-    .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>(connectionString, databaseName);
 
 builder.Services.AddSingleton<ListingDataService>();
 
@@ -57,6 +31,12 @@ builder.Services.AddApiVersioning(options =>
     options.DefaultApiVersion = new ApiVersion(1, 0);
     //options.AssumeDefaultVersionWhenUnspecified = true;  
 });
+
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ContractResolver = new FieldsFilterContractResolver();
+    });
 
 var app = builder.Build();
 

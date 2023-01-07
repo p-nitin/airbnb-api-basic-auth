@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 
 namespace airbnb.api.DataModel
@@ -110,10 +111,9 @@ namespace airbnb.api.DataModel
     }
 
     [BsonIgnoreExtraElements]
-    public class Listing
+    public class Listing : BaseEntity
     {
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         public string listing_url { get; set; }
         public string name { get; set; }
@@ -140,13 +140,21 @@ namespace airbnb.api.DataModel
         public int? bedrooms { get; set; }
         public int? beds { get; set; }
         public int? number_of_reviews { get; set; }
+        [BsonRepresentation(BsonType.Decimal128)]
         public decimal? bathrooms { get; set; }
         public List<string> amenities { get; set; }
+        [BsonRepresentation(BsonType.Decimal128)]
+        //https://stackoverflow.com/questions/43127406/mongodb-linq-provider-incorrect-behavior-for-fields-of-type-decimal
         public decimal? price { get; set; }
+        [BsonRepresentation(BsonType.Decimal128)]
         public decimal? weekly_price { get; set; }
+        [BsonRepresentation(BsonType.Decimal128)]
         public decimal? monthly_price { get; set; }
+        [BsonRepresentation(BsonType.Decimal128)]
         public decimal? security_deposit { get; set; }
+        [BsonRepresentation(BsonType.Decimal128)]
         public decimal? cleaning_fee { get; set; }
+        [BsonRepresentation(BsonType.Decimal128)]
         public decimal? extra_people { get; set; }
         public int? guests_included { get; set; }
         public Images images { get; set; }
