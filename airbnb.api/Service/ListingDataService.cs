@@ -106,21 +106,6 @@ namespace airbnb.api.Service
                     .Limit(pageSize)
                     .ToListAsync();
             }
-
-            //if (filter == builder.Empty)
-            //{
-            //    return await _listingsCollection.Find(_ => true)
-            //    .Skip(offset)
-            //    .Limit(pageSize)
-            //    .ToListAsync();
-            //}
-            //else
-            //{
-            //    return await _listingsCollection.Find(filter)
-            //    .Skip(offset)
-            //    .Limit(pageSize)
-            //    .ToListAsync();
-            //}
         }
 
         public async Task<Listing?> GetAsync(string id) =>
